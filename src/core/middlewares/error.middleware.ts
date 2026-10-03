@@ -1,0 +1,28 @@
+import { NextFunction, Request, Response } from "express";
+import { ZodError } from "zod";
+import { AppError } from "../errors/app-error";
+
+export function errorMiddleware(error: Error, _req: Request, res: Response, _next: NextFunction) {
+  if (error instanceof AppError) {
+    return res.status(error.statusCode).json({
+      success: false,
+      message: error.message,
+      details: error.details,
+    });
+  }
+
+  if (error instanceof ZodError) {
+    return res.status(422).json({
+      success: false,
+      message: "Erro de validação",
+      details: error.flatten(),
+    });
+  }
+
+  console.error(error);
+
+  return res.status(500).json({
+    success: false,
+    message: "Erro interno do servidor",
+  });
+}

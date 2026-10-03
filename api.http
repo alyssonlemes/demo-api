@@ -1,0 +1,32 @@
+@baseUrl = http://localhost:3333
+
+### Health
+GET {{baseUrl}}/health
+
+### Register
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "Novo Usuário",
+  "email": "novo@demo.com",
+  "password": "123456"
+}
+
+### Login
+# @name login
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@demo.com",
+  "password": "admin123"
+}
+
+### Me
+GET {{baseUrl}}/api/auth/me
+Authorization: Bearer {{login.response.body.data.token}}
+
+### List users
+GET {{baseUrl}}/api/users?page=1&limit=10&search=demo
+Authorization: Bearer {{login.response.body.data.token}}
